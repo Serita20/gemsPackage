@@ -122,8 +122,26 @@ head(tavi)
       }
       
       #Simulate Cohort
-      ds2 <- simulateCohort(transitionFunctions = hm2, 
-                            parameters = par2, cohortSize = 100 * nrow(tavi), to = maxtime)
+      
+      ds2 <- simulateCohort(transitionFunctions = hm2, parameters = par2, cohortSize = 100 * nrow(tavi), to = maxtime)
       cinc2 <- cumulativeIncidence(ds2, 0:maxtime, colnames(tmat), M = 100)
       
+      
+#Plot certain states
+      
+      plot(cinc, states = 4, axes = FALSE, frame = TRUE, col = 2,
+           xlab = "Time (in months)", main = "Mortality", ci = TRUE)
+      lines(survfit(Surv(death.dur, death) ~ 1, data = tavi),
+               fun = "event", lwd = 2)
+      lines(survfit(Surv(death.dur, death) ~ 1, data = tavi),
+               fun = "event", lwd = 2, conf.int = TRUE, lty = 2)
+      par(new = TRUE)
+      
+      
+      plot(cinc2, states = 4, axes = FALSE, frame = TRUE, col = 3,
+              xlab = "", main = "", ci = TRUE)
+      axis(2); axis(4)
+      axis(1, at = (0:13 * 90)[0:6 * 2 + 1], labels = (0:13 * 3)[0:6 * 2 + 1])
+      legend(200, 0.8, c("Data", "Simulation: exponential",
+                            "Simulation: piecewise exponential"), lty = 1, col = 1:3, lwd = 2)      
       
